@@ -3,7 +3,7 @@
 Welcome to the Data Analysis Project! This README will guide you through the setup and usage of this project.
 ![Project Logo](image/Bike.png)
 ## Folder Structure
-![Folder Structure](image/Screenshot%202024-09-27%20at%2015.09.09.png)
+![Folder Structure](image/Screenshot%202024-09-27%20at%2015.15.49.png)
 ## Introduction
 
 This project is designed to perform data analysis on various datasets. It includes scripts and tools to clean, process, and visualize data.
@@ -30,7 +30,3 @@ To run the dashboard :
 cd dashboard
 streamlit run dashboard.py
 ```
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
