@@ -30,3 +30,6 @@ To run the dashboard :
 cd dashboard
 streamlit run dashboard.py
 ```
+
+## Link
+https://bqszcvx4khr2ufvxjva36h.streamlit.app/
