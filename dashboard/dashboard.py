@@ -247,10 +247,9 @@ st.subheader("Count of Bikeshare Rides on Working Days vs Non-Working Days")
 
 fig, ax = plt.subplots(figsize=(10, 6))
 sns.barplot(data=workingday_users_df, x='workingday', y='count_rides', hue='type_of_rides', ax=ax, palette='viridis')
-ax.set_xlabel("Working Day")
+ax.set_xlabel("Day Type")
 ax.set_ylabel("Total Rides")
 ax.set_title("Count of Bikeshare Rides on Working Days vs Non-Working Days")
-ax.set_xticklabels(['Non-Working Day', 'Working Day'])
 plt.legend(title='Type of Rides')
 st.pyplot(fig)
 
