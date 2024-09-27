@@ -249,4 +249,17 @@ ax.set_title("Count of Bikeshare Rides on Working Days vs Non-Working Days")
 plt.xticks(rotation=45, ha='right')
 st.pyplot(fig)
 
+st.subheader("Bike Usage by Weekday")
+
+# Area Chart for Weekday Usage
+weekday_users_df_pivot = weekday_users_df.pivot_table(index='weekday', columns='type_of_rides', values='count_rides')
+fig2, ax2 = plt.subplots()
+ax2.fill_between(weekday_users_df_pivot.index, weekday_users_df_pivot['casual_rides'], label='Casual Rides', alpha=0.5, color='orange')
+ax2.fill_between(weekday_users_df_pivot.index, weekday_users_df_pivot['registered_rides'], label='Registered Rides', alpha=0.5, color='skyblue')
+ax2.set_title('Count of Bikeshare Rides by Weekday')
+ax2.set_xlabel('')
+ax2.set_ylabel('Total Rides')
+ax2.legend()
+st.pyplot(fig2)
+
 st.caption('Copyright (c), created by Alvin Astradinata')
