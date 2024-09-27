@@ -6,7 +6,7 @@ import numpy as np
 import streamlit as st
 
 # Load dataset
-df = pd.read_csv("data.csv")
+df = pd.read_csv("https://github.com/alvinastr/Submission-Proyek-Analisis-Data/blob/b50b56e02027ca1b6d0c0d3f4694e01a8b8ab341/dashboard/data.csv")
 df['date'] = pd.to_datetime(df['date'])
 
 st.set_page_config(page_title="Bike-sharing Dashboard :bike:", page_icon=":bike:")
