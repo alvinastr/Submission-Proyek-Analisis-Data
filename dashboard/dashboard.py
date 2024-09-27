@@ -99,10 +99,7 @@ min_date = df["date"].min()
 max_date = df["date"].max()
 
 with st.sidebar:
-    if os.path.exists("https://github.com/alvinastr/Submission-Proyek-Analisis-Data/blob/7235452611dd323c7862cabfbadae6e64f8a09f1/image/Bike.png"):
-        st.image("https://github.com/alvinastr/Submission-Proyek-Analisis-Data/blob/7235452611dd323c7862cabfbadae6e64f8a09f1/image/Bike.png", width=200)
-    else:
-        st.warning("Image file not found.")
+    st.image("image/Bike.png")
     
     # Date range slider
     start_date, end_date = st.slider(
