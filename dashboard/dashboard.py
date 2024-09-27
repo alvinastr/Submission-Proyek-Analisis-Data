@@ -243,14 +243,18 @@ plt.xticks(rotation=45, ha='right')
 st.pyplot(fig)
 
 # Workingday vs Non-Workingday Rides Bar Chart
+workingday_map = {0: 'Non-Working Day', 1: 'Working Day'}
+workingday_users_df['day_type'] = workingday_users_df['workingday'].map(workingday_map)
+
 st.subheader("Count of Bikeshare Rides on Working Days vs Non-Working Days")
 
 fig, ax = plt.subplots(figsize=(10, 6))
-sns.barplot(data=workingday_users_df, x='workingday', y='count_rides', hue='type_of_rides', ax=ax, palette='viridis')
+sns.barplot(data=workingday_users_df, x='day_type', y='count_rides', hue='type_of_rides', ax=ax, palette='viridis')
 ax.set_xlabel("Day Type")
 ax.set_ylabel("Total Rides")
 ax.set_title("Count of Bikeshare Rides on Working Days vs Non-Working Days")
 plt.legend(title='Type of Rides')
+plt.xticks(rotation=0)
 st.pyplot(fig)
 
 st.caption('Copyright (c), created by Alvin Astradinata')
