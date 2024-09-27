@@ -6,7 +6,7 @@ import numpy as np
 import streamlit as st
 
 # Load dataset
-df = pd.read_csv("data.csv")
+df = pd.read_csv("dashboard/data.csv")
 df['date'] = pd.to_datetime(df['date'])
 
 st.set_page_config(page_title="Bike-sharing Dashboard :bike:", page_icon=":bike:")
@@ -122,7 +122,7 @@ min_date = df["date"].min()
 max_date = df["date"].max()
 
 with st.sidebar:
-    # st.image("image/Bike.png")
+    st.image("image/Bike.png")
     
     # Date range slider
     start_date, end_date = st.slider(
