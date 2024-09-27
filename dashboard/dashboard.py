@@ -177,20 +177,24 @@ ax.legend()
 st.pyplot(fig)
 
 # Season Rides Pie Chart
+st.subheader("Distribution of Bikeshare Rides by Season")
 fig1, ax1 = plt.subplots()
-ax1.pie(seasonly_users_df['count_rides'], labels=seasonly_users_df['season'], autopct='%1.1f%%', startangle=90, colors=['orange', 'skyblue'])
+season_colors = ['#FF9999', '#66B2FF', '#99FF99', '#FFCC99']
+ax1.pie(seasonly_users_df['count_rides'], labels=seasonly_users_df['season'], autopct='%1.1f%%', startangle=90, colors=season_colors)
 ax1.set_title('Season Count of Bikeshare Rides')
+plt.legend(title="Seasons", loc="center left", bbox_to_anchor=(1, 0, 0.5, 1))
 st.pyplot(fig1)
 
 # Weekday Rides Area Chart
+st.subheader("Count of Bikeshare Rides by Weekday")
 weekday_users_df_pivot = weekday_users_df.pivot_table(index='weekday', columns='type_of_rides', values='count_rides')
-fig2, ax2 = plt.subplots()
-ax2.fill_between(weekday_users_df_pivot.index, weekday_users_df_pivot['casual_rides'], label='Casual Rides', alpha=0.5, color='orange')
-ax2.fill_between(weekday_users_df_pivot.index, weekday_users_df_pivot['registered_rides'], label='Registered Rides', alpha=0.5, color='skyblue')
+fig2, ax2 = plt.subplots(figsize=(10, 6))
+weekday_users_df_pivot.plot(kind='bar', ax=ax2)
 ax2.set_title('Count of Bikeshare Rides by Weekday')
-ax2.set_xlabel('')
+ax2.set_xlabel('Weekday')
 ax2.set_ylabel('Total Rides')
-ax2.legend()
+ax2.legend(title='Type of Rides')
+plt.xticks(rotation=45, ha='right')
 st.pyplot(fig2)
 
 # Weather-Based Rides Visualization
@@ -241,12 +245,13 @@ st.pyplot(fig)
 # Workingday vs Non-Workingday Rides Bar Chart
 st.subheader("Count of Bikeshare Rides on Working Days vs Non-Working Days")
 
-fig, ax = plt.subplots(figsize=(12, 6))
+fig, ax = plt.subplots(figsize=(10, 6))
 sns.barplot(data=workingday_users_df, x='workingday', y='count_rides', hue='type_of_rides', ax=ax, palette='viridis')
 ax.set_xlabel("Working Day")
 ax.set_ylabel("Total Rides")
 ax.set_title("Count of Bikeshare Rides on Working Days vs Non-Working Days")
-plt.xticks(rotation=45, ha='right')
+ax.set_xticklabels(['Non-Working Day', 'Working Day'])
+plt.legend(title='Type of Rides')
 st.pyplot(fig)
 
 st.caption('Copyright (c), created by Alvin Astradinata')
