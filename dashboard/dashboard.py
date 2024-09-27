@@ -53,6 +53,9 @@ def create_seasonly_users_df(df):
     return seasonly_users_df
 
 def create_weekday_users_df(df):
+    weekday_map = {0: 'Monday', 1: 'Tuesday', 2: 'Wednesday', 3: 'Thursday', 4: 'Friday', 5: 'Saturday', 6: 'Sunday'}
+    df['weekday'] = df['weekday'].map(weekday_map)
+    
     weekday_users_df = df.groupby("weekday").agg({
         "casual_user": "sum",
         "registered_user": "sum",
@@ -94,6 +97,9 @@ def create_weather_users_df(df):
     return weather_users_df
 
 def create_workingday_users_df(df):
+    workingday_map = {0: 'Non-Working Day', 1: 'Working Day'}
+    df['workingday'] = df['workingday'].map(workingday_map)
+    
     workingday_users_df = df.groupby("workingday").agg({
         "casual_user": "sum",
         "registered_user": "sum",
@@ -113,8 +119,6 @@ def create_workingday_users_df(df):
         var_name='type_of_rides',
         value_name='count_rides'
     )
-    workingday_users_df['workingday'] = pd.Categorical(workingday_users_df['workingday'], categories=[0, 1])
-    workingday_users_df = workingday_users_df.sort_values('workingday')
     return workingday_users_df
 
 # Sidebar
@@ -176,13 +180,14 @@ ax.set_ylabel('Total Rides')
 ax.legend()
 st.pyplot(fig)
 
-# Season Rides Pie Chart
+# Season Rides Bar Chart
 st.subheader("Distribution of Bikeshare Rides by Season")
-fig1, ax1 = plt.subplots()
-season_colors = ['#FF9999', '#66B2FF', '#99FF99', '#FFCC99']
-ax1.pie(seasonly_users_df['count_rides'], labels=seasonly_users_df['season'], autopct='%1.1f%%', startangle=90, colors=season_colors)
+fig1, ax1 = plt.subplots(figsize=(10, 6))
+sns.barplot(data=seasonly_users_df, x='season', y='count_rides', hue='type_of_rides', ax=ax1)
 ax1.set_title('Season Count of Bikeshare Rides')
-plt.legend(title="Seasons", loc="center left", bbox_to_anchor=(1, 0, 0.5, 1))
+ax1.set_xlabel('Season')
+ax1.set_ylabel('Total Rides')
+plt.legend(title="Type of Rides")
 st.pyplot(fig1)
 
 # Weekday Rides Area Chart
@@ -205,22 +210,13 @@ selected_weather = st.multiselect("Select Weather Conditions", weather_options, 
 
 filtered_weather_df = weather_users_df[weather_users_df['weather'].isin(selected_weather)]
 
-chart_type = st.radio("Select Chart Type", ("Bar Chart", "Pie Chart"))
-
-if chart_type == "Bar Chart":
-    fig, ax = plt.subplots(figsize=(12, 6))
-    sns.barplot(data=filtered_weather_df, x='weather', y='total_rides', ax=ax, palette='viridis')
-    ax.set_xlabel("Weather Condition")
-    ax.set_ylabel("Total Rides")
-    ax.set_title("Count of Bikeshare Rides by Weather")
-    plt.xticks(rotation=45, ha='right')
-    st.pyplot(fig)
-
-elif chart_type == "Pie Chart":
-    fig, ax = plt.subplots(figsize=(10, 10))
-    ax.pie(filtered_weather_df['total_rides'], labels=filtered_weather_df['weather'], autopct='%1.1f%%', startangle=90, colors=plt.cm.Spectral(np.linspace(0, 1, len(filtered_weather_df))))
-    ax.set_title('Distribution of Bikeshare Rides by Weather')
-    st.pyplot(fig)
+fig, ax = plt.subplots(figsize=(12, 6))
+sns.barplot(data=filtered_weather_df, x='weather', y='total_rides', ax=ax, palette='viridis')
+ax.set_xlabel("Weather Condition")
+ax.set_ylabel("Total Rides")
+ax.set_title("Count of Bikeshare Rides by Weather")
+plt.xticks(rotation=45, ha='right')
+st.pyplot(fig)
 
 # Casual vs Registered Rides by Weather
 st.subheader("Comparison of Casual and Registered Rides by Weather")
@@ -243,13 +239,10 @@ plt.xticks(rotation=45, ha='right')
 st.pyplot(fig)
 
 # Workingday vs Non-Workingday Rides Bar Chart
-workingday_map = {0: 'Non-Working Day', 1: 'Working Day'}
-workingday_users_df['day_type'] = workingday_users_df['workingday'].map(workingday_map)
-
 st.subheader("Count of Bikeshare Rides on Working Days vs Non-Working Days")
 
 fig, ax = plt.subplots(figsize=(10, 6))
-sns.barplot(data=workingday_users_df, x='day_type', y='count_rides', hue='type_of_rides', ax=ax, palette='viridis')
+sns.barplot(data=workingday_users_df, x='workingday', y='count_rides', hue='type_of_rides', ax=ax, palette='viridis')
 ax.set_xlabel("Day Type")
 ax.set_ylabel("Total Rides")
 ax.set_title("Count of Bikeshare Rides on Working Days vs Non-Working Days")
