@@ -6,7 +6,7 @@ import numpy as np
 import streamlit as st
 
 # Load dataset
-df = pd.read_csv("dashboard/data.csv")
+df = pd.read_csv("data.csv")
 df['date'] = pd.to_datetime(df['date'])
 
 st.set_page_config(page_title="Bike-sharing Dashboard :bike:", page_icon=":bike:")
@@ -93,13 +93,36 @@ def create_weather_users_df(df):
     weather_users_df = weather_users_df.sort_values('weather')
     return weather_users_df
 
+def create_workingday_users_df(df):
+    workingday_users_df = df.groupby("workingday").agg({
+        "casual_user": "sum",
+        "registered_user": "sum",
+        "total_user": "sum"
+    })
+    workingday_users_df = workingday_users_df.reset_index()
+    workingday_users_df.rename(columns={
+        "total_user": "total_rides",
+        "casual_user": "casual_rides",
+        "registered_user": "registered_rides"
+    }, inplace=True)
+    
+    workingday_users_df = pd.melt(
+        workingday_users_df,
+        id_vars=['workingday'],
+        value_vars=['casual_rides', 'registered_rides'],
+        var_name='type_of_rides',
+        value_name='count_rides'
+    )
+    workingday_users_df['workingday'] = pd.Categorical(workingday_users_df['workingday'], categories=[0, 1])
+    workingday_users_df = workingday_users_df.sort_values('workingday')
+    return workingday_users_df
 
 # Sidebar
 min_date = df["date"].min()
 max_date = df["date"].max()
 
 with st.sidebar:
-    st.image("image/Bike.png")
+    # st.image("image/Bike.png")
     
     # Date range slider
     start_date, end_date = st.slider(
@@ -121,6 +144,7 @@ monthly_users_df = create_monthly_users_df(main_df)
 weekday_users_df = create_weekday_users_df(main_df)
 seasonly_users_df = create_seasonly_users_df(main_df)
 weather_users_df = create_weather_users_df(main_df)
+workingday_users_df = create_workingday_users_df(main_df)
 
 # Main dashboard title
 st.title("Bike-Sharing Dashboard :bike:")
@@ -211,6 +235,17 @@ ax.set_xticks([i + width/2 for i in x])
 ax.set_xticklabels(filtered_weather_df['weather'])
 ax.legend()
 
+plt.xticks(rotation=45, ha='right')
+st.pyplot(fig)
+
+# Workingday vs Non-Workingday Rides Bar Chart
+st.subheader("Count of Bikeshare Rides on Working Days vs Non-Working Days")
+
+fig, ax = plt.subplots(figsize=(12, 6))
+sns.barplot(data=workingday_users_df, x='workingday', y='count_rides', hue='type_of_rides', ax=ax, palette='viridis')
+ax.set_xlabel("Working Day")
+ax.set_ylabel("Total Rides")
+ax.set_title("Count of Bikeshare Rides on Working Days vs Non-Working Days")
 plt.xticks(rotation=45, ha='right')
 st.pyplot(fig)
 
